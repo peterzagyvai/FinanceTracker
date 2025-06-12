@@ -5,7 +5,7 @@ namespace FinanceTrackerApi.Models;
 
 public class Item
 {
-    private string _name;
+    private string _name = "Unknown";
     public string Name
     {
         get { return _name; }
@@ -22,7 +22,7 @@ public class Item
         }
     }
 
-    private string _category;
+    private string _category = "Undefined";
     public string Category
     {
         get { return _category; }

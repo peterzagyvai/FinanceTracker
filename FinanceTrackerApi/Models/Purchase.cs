@@ -20,6 +20,20 @@ public class Purchase : TransactionSource
         }
     }
 
+    public DateTime DateOfPurchase
+    {
+        get { return _dateOfPurchase; }
+        set
+        {
+            if (value.Equals(_dateOfPurchase))
+            {
+                return;
+            }
+
+            _dateOfPurchase = value;
+        }
+    }
+
     private readonly List<PurchasedItem> _purchasedItems;
     public List<PurchasedItem> PurchasedItems { get { return _purchasedItems; } }
 
@@ -34,7 +48,7 @@ public class Purchase : TransactionSource
             new PurchasedItem(amount, pricePerUnit, item)
         );
 
-        Transaction.TransactionAmount = TotalPriceInCurrency(Transaction.TransactionAmount.CurrencyISO);
+        Transaction.TransactionAmount = TotalPriceInCurrency(Transaction.TransactionAmount.CurrencyISO).Negate();
     }
 
     public void RemoveItem(PurchasedItem item)

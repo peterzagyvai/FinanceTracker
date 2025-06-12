@@ -46,6 +46,15 @@ public class Money
         return Amount;
     }
 
+    public Money Negate()
+    {
+        return new Money()
+        {
+            Amount = -this.Amount,
+            CurrencyISO = _currencyISO
+        };
+    }
+
     public override string ToString()
     {
         return $"{Amount} {ISOToDisplayeble(CurrencyISO)}";
