@@ -50,10 +50,11 @@ public class Payment : TransactionSource
         }
     }
 
-    public Payment(Money amount, IUser from, IUser to)
+    public Payment(Money amount, DateTime date, IUser from, IUser to)
         : base(from, to)
     {
         Amount = amount;
+        Date = date;
         From.TransactionAmount = Amount.Negate();
         To.TransactionAmount = Amount;
     }
