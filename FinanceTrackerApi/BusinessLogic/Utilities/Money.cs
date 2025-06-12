@@ -1,6 +1,6 @@
 using System;
 
-namespace FinanceTrackerApi.Utilities;
+namespace FinanceTrackerApi.BusinessLogic.Utilities;
 
 public class Money
 {
@@ -58,5 +58,23 @@ public class Money
     public override string ToString()
     {
         return $"{Amount} {ISOToDisplayeble(CurrencyISO)}";
+    }
+
+    public static Money operator +(Money m1, Money m2)
+    {
+        return new Money()
+        {
+            Amount = m1.Amount + m2.ConvertAmountToCurrency(m1.CurrencyISO),
+            CurrencyISO = m1.CurrencyISO
+        };
+    }
+
+     public static Money operator -(Money m1, Money m2)
+    {
+        return new Money()
+        {
+            Amount = m1.Amount - m2.ConvertAmountToCurrency(m1.CurrencyISO),
+            CurrencyISO = m1.CurrencyISO
+        };
     }
 }

@@ -1,9 +1,9 @@
 using System;
 using System.ComponentModel.DataAnnotations;
-using FinanceTrackerApi.Interfaces;
-using FinanceTrackerApi.Utilities;
+using FinanceTrackerApi.BusinessLogic.Interfaces;
+using FinanceTrackerApi.BusinessLogic.Utilities;
 
-namespace FinanceTrackerApi.Models;
+namespace FinanceTrackerApi.BusinessLogic.Models;
 
 public class Income : TransactionSource
 {

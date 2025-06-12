@@ -1,6 +1,6 @@
 using System;
 
-namespace FinanceTrackerApi.Interfaces;
+namespace FinanceTrackerApi.BusinessLogic.Interfaces;
 
 public interface IUser
 {
