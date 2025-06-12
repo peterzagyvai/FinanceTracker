@@ -270,3 +270,6 @@ __pycache__/
 #appsettings
 appsettings.json
 appsettings.Development.json
+
+#vscode
+*.code-workspace
