@@ -1,4 +1,5 @@
 using System;
+using FinanceTrackerApi.Interfaces;
 using FinanceTrackerApi.Utilities;
 
 namespace FinanceTrackerApi.Models;
@@ -6,12 +7,20 @@ namespace FinanceTrackerApi.Models;
 public abstract class TransactionSource
 {
     public abstract DateTime DateOfTransaction { get; set; }
-    public Transaction Transaction { get; protected set; }
-    protected TransactionSource()
+    public Transaction From { get; protected set; }
+    public Transaction To { get; protected set; }
+    protected TransactionSource(IUser from, IUser to)
     {
-        Transaction = new Transaction(
+        From = new Transaction(
             new Money(),
-            this
+            this,
+            from
+        );
+
+        To = new Transaction(
+            new Money(),
+            this,
+            to
         );
     }
 }

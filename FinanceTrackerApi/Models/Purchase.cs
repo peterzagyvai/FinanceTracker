@@ -1,4 +1,5 @@
 using System;
+using FinanceTrackerApi.Interfaces;
 using FinanceTrackerApi.Utilities;
 
 namespace FinanceTrackerApi.Models;
@@ -37,7 +38,8 @@ public class Purchase : TransactionSource
     private readonly List<PurchasedItem> _purchasedItems;
     public List<PurchasedItem> PurchasedItems { get { return _purchasedItems; } }
 
-    public Purchase(DateTime dateOfPurchase)
+    public Purchase(DateTime dateOfPurchase, IUser from, IUser to)
+        : base(from, to)
     {
         _purchasedItems = new();
     }
@@ -48,7 +50,8 @@ public class Purchase : TransactionSource
             new PurchasedItem(amount, pricePerUnit, item)
         );
 
-        Transaction.TransactionAmount = TotalPriceInCurrency(Transaction.TransactionAmount.CurrencyISO).Negate();
+        From.TransactionAmount = TotalPriceInCurrency(From.TransactionAmount.CurrencyISO).Negate();
+        To.TransactionAmount = TotalPriceInCurrency(To.TransactionAmount.CurrencyISO);
     }
 
     public void RemoveItem(PurchasedItem item)

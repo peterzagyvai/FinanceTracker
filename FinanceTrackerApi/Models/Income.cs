@@ -1,5 +1,6 @@
 using System;
 using System.ComponentModel.DataAnnotations;
+using FinanceTrackerApi.Interfaces;
 using FinanceTrackerApi.Utilities;
 
 namespace FinanceTrackerApi.Models;
@@ -51,10 +52,14 @@ public class Income : TransactionSource
         }
     }
 
-    public Income(DateTime dateOfIncome, string sourceOfIncome, Money amountOfIncome)
+    public Income(DateTime dateOfIncome, string sourceOfIncome, Money amountOfIncome, IUser from, IUser to)
+        : base(from, to)
     {
         DateOfIncome = dateOfIncome;
         SourceOfIncome = sourceOfIncome;
         AmountOfIncome = amountOfIncome;
+
+        From.TransactionAmount = AmountOfIncome.Negate();
+        To.TransactionAmount = AmountOfIncome;
     }
 }

@@ -18,7 +18,7 @@ public class PurchasedItem
 
             if (value <= 0)
             {
-                throw new ArgumentOutOfRangeException($"Amount can't be less or equal to 0. Current value: {value}");
+                throw new ArgumentOutOfRangeException(nameof(value), $"Amount can't be less or equal to 0. Current value: {value}");
             }
 
             _amount = value;
@@ -38,7 +38,7 @@ public class PurchasedItem
 
             if (value.Amount < 0)
             {
-                throw new ArgumentOutOfRangeException($"Price of an item can't be less than 0. Current price is {value}");
+                throw new ArgumentOutOfRangeException(nameof(value), $"Price of an item can't be less than 0. Current price is {value}");
             }
 
             _price = value;
