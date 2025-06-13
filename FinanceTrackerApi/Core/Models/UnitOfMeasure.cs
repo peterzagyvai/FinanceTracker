@@ -1,4 +1,4 @@
-namespace FinanceTrackerApi.BusinessLogic.Utilities;
+namespace FinanceTrackerApi.Core.Models;
 
 public enum UnitOfMeasure
 {

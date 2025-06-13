@@ -1,7 +1,6 @@
 using System;
-using FinanceTrackerApi.BusinessLogic.Utilities;
 
-namespace FinanceTrackerApi.BusinessLogic.Models;
+namespace FinanceTrackerApi.Core.Models;
 
 public class PurchasedItem
 {
