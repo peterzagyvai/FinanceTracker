@@ -37,11 +37,11 @@ public class AppUser : IUser
                 {
                     if (debt.Creditor == this)
                     {
-                        moneyOnAccount += payment.Amount;
+                        moneyOnAccount += payment.PaymentAmount;
                     }
                     if (debt.Debtor == this)
                     {
-                        moneyOnAccount -= payment.Amount;
+                        moneyOnAccount -= payment.PaymentAmount;
                     }
                 }
             }

@@ -36,7 +36,7 @@ public class Payment : TransactionSource
     }
 
     private Money _amount;
-    public Money Amount
+    public Money PaymentAmount
     {
         get { return _amount; }
         set
@@ -53,9 +53,9 @@ public class Payment : TransactionSource
     public Payment(Money amount, DateTime date, IUser from, IUser to)
         : base(from, to)
     {
-        Amount = amount;
+        PaymentAmount = amount;
         Date = date;
-        From.TransactionAmount = Amount.Negate();
-        To.TransactionAmount = Amount;
+        From.TransactionAmount = PaymentAmount.Negate();
+        To.TransactionAmount = PaymentAmount;
     }
 }

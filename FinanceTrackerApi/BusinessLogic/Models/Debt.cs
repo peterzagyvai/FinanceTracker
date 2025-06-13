@@ -49,7 +49,7 @@ public class Debt
             decimal payedLoan = 0;
             foreach (var payment in Payments)
             {
-                payedLoan += payment.Amount.ConvertAmountToCurrency(Loan.CurrencyISO);
+                payedLoan += payment.PaymentAmount.ConvertAmountToCurrency(Loan.CurrencyISO);
             }
 
             return new Money()
