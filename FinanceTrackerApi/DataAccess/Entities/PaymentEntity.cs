@@ -8,7 +8,4 @@ public class PaymentEntity
     public int Id { get; set; }
     public TransactionSourceEntity? TransactionSource { get; set; }
     public DateTime Date { get; set; } = DateTime.Now;
-
-    [Required]
-    public MoneyEntity? Amount { get; set; }
 }

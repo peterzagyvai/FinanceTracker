@@ -11,7 +11,4 @@ public class IncomeEntity
 
     [Required]
     public string? SourceOfIncome { get; set; }
-    
-    [Required]
-    public MoneyEntity? AmountOfIncome { get; set; }
 }

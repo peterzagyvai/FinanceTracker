@@ -9,4 +9,5 @@ public class TransactionEntity
 
     [Required]
     public TransactionParticipantEntity? Participant { get; set; }
+    public MoneyEntity? TransactionAmount { get; set; }
 }
