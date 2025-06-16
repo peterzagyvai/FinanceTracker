@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace FinanceTrackerApi.DataAccess
 {
-    public class AppDbContext
+    public class AppDbContext 
     {
         
     }
