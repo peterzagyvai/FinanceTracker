@@ -3,7 +3,7 @@ using FinanceTrackerApi.Core.Interfaces;
 
 namespace FinanceTrackerApi.Core.Models;
 
-public class AppUser : IUser
+public class AppUser : ITransactionParticipant
 {
     private readonly List<Debt> _debts = new();
     private readonly List<Income> _incomes = new();

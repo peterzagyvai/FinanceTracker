@@ -11,10 +11,10 @@ public class Debt
     public DateTime? deadline { get; set; }
     public List<Payment> Payments { get; } = new();
     public Money Loan { get; set; }
-    public IUser Creditor { get; set; }
-    public IUser Debtor { get; set; }
+    public ITransactionParticipant Creditor { get; set; }
+    public ITransactionParticipant Debtor { get; set; }
 
-    public Debt(Money loan, IUser creditor, IUser debtor)
+    public Debt(Money loan, ITransactionParticipant creditor, ITransactionParticipant debtor)
     {
         Loan = loan;
         Creditor = creditor;

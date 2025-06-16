@@ -49,7 +49,7 @@ public class Payment : TransactionSource
         }
     }
 
-    public Payment(Money amount, DateTime date, IUser from, IUser to)
+    public Payment(Money amount, DateTime date, ITransactionParticipant from, ITransactionParticipant to)
         : base(from, to)
     {
         PaymentAmount = amount;

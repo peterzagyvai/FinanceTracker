@@ -49,7 +49,7 @@ public class Income : TransactionSource
         }
     }
 
-    public Income(DateTime dateOfIncome, string sourceOfIncome, Money amountOfIncome, IUser from, IUser to)
+    public Income(DateTime dateOfIncome, string sourceOfIncome, Money amountOfIncome, ITransactionParticipant from, ITransactionParticipant to)
         : base(from, to)
     {
         DateOfIncome = dateOfIncome;

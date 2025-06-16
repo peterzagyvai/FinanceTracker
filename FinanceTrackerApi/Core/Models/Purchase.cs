@@ -37,7 +37,7 @@ public class Purchase : TransactionSource
     private readonly List<PurchasedItem> _purchasedItems;
     public List<PurchasedItem> PurchasedItems { get { return _purchasedItems; } }
 
-    public Purchase(DateTime dateOfPurchase, IUser from, IUser to)
+    public Purchase(DateTime dateOfPurchase, ITransactionParticipant from, ITransactionParticipant to)
         : base(from, to)
     {
         _purchasedItems = new();
