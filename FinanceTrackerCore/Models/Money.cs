@@ -29,24 +29,52 @@ public class Money
     }
 
     //TODO: implement later 
+    /// <summary>
+    /// Checks if the iso code is a valid currency iso code
+    /// </summary>
+    /// <param name="isoCode">The iso code that will be checked</param>
+    /// <returns>True if isoCode is an existing currency iso code. False otherwise.</returns>
     private static bool IsValidISOCode(string isoCode)
     {
         return true;
     }
 
     //TODO: implement later
-    private static string ISOToDisplayeble(string isoCode)
+    /// <summary>
+    /// Returns the symbol of the currency's iso code
+    /// </summary>
+    /// <returns>The symbol of the currency's iso code</returns>
+    private static string ISOToSymbol(string isoCode)
     {
         return isoCode;
     }
 
     //TODO: implement later
-    public decimal ConvertAmountToCurrency(string convertToIsoCode)
+    /// <summary>
+    /// Returns the amount property of the money in the currency given in the parameters
+    /// </summary>
+    /// <param name="isoCode"></param>
+    /// <returns>The amount of money in the currency given in the parameters</returns>
+    public decimal GetAmountInCurrency(string isoCode)
     {
         return Amount;
     }
 
-    public Money Negate()
+    //TODO: implement later
+    /// <summary>
+    /// Converts the money to a different currency.
+    /// </summary>
+    /// <param name="isoCode"></param>
+    public void ConvertAmountToCurrency(string isoCode)
+    {
+
+    }
+
+    /// <summary>
+    /// Returns money with the same currancy and a negated amount
+    /// </summary>
+    /// <returns>Money with the same currancy and a negated amount</returns>
+    public Money GetNegated()
     {
         return new Money()
         {
@@ -57,51 +85,87 @@ public class Money
 
     public override string ToString()
     {
-        return $"{Amount} {ISOToDisplayeble(CurrencyISO)}";
+        return $"{Amount} {ISOToSymbol(CurrencyISO)}";
     }
 
+    /// <summary>
+    /// Returns the sum of two money object represented with the first one's currency
+    /// </summary>
+    /// <param name="m1"></param>
+    /// <param name="m2"></param>
+    /// <returns>The sum of two money object represented with the first one's currency</returns>
     public static Money operator +(Money m1, Money m2)
     {
         return new Money()
         {
-            Amount = m1.Amount + m2.ConvertAmountToCurrency(m1.CurrencyISO),
+            Amount = m1.Amount + m2.GetAmountInCurrency(m1.CurrencyISO),
             CurrencyISO = m1.CurrencyISO
         };
     }
 
+    /// <summary>
+    /// Returns the difference of two money object represented with the first one's currency
+    /// </summary>
+    /// <param name="m1"></param>
+    /// <param name="m2"></param>
+    /// <returns>The difference of two money object represented with the first one's currency</returns>
     public static Money operator -(Money m1, Money m2)
     {
         return new Money()
         {
-            Amount = m1.Amount - m2.ConvertAmountToCurrency(m1.CurrencyISO),
+            Amount = m1.Amount - m2.GetAmountInCurrency(m1.CurrencyISO),
             CurrencyISO = m1.CurrencyISO
         };
     }
 
+    /// <summary>
+    /// Checks if the value of the first money is more than the second one's value
+    /// </summary>
+    /// <param name="m1"></param>
+    /// <param name="m2"></param>
+    /// <returns>True if the value of the first money object is more than the second. False otherwise</returns>
     public static bool operator >(Money m1, Money m2)
     {
         decimal m1Amount = m1.Amount;
-        decimal m2Amount = m2.ConvertAmountToCurrency(m1.CurrencyISO);
+        decimal m2Amount = m2.GetAmountInCurrency(m1.CurrencyISO);
 
         return m1Amount > m2Amount;
     }
 
+    /// <summary>
+    /// Checks if the value of the first money is less than the second one's value
+    /// </summary>
+    /// <param name="m1"></param>
+    /// <param name="m2"></param>
+    /// <returns>True if the value of the first money object is more less the second. False otherwise</returns>
     public static bool operator <(Money m1, Money m2)
     {
         decimal m1Amount = m1.Amount;
-        decimal m2Amount = m2.ConvertAmountToCurrency(m1.CurrencyISO);
+        decimal m2Amount = m2.GetAmountInCurrency(m1.CurrencyISO);
 
         return m1Amount < m2Amount;
     }
 
+    /// <summary>
+    /// Checks if the values of the two money object (regardless of currency) are equal
+    /// </summary>
+    /// <param name="m1"></param>
+    /// <param name="m2"></param>
+    /// <returns>True if the values of the two money object (regardless of currency) are equal. False otherwise</returns>
     public static bool operator ==(Money m1, Money m2)
     {
         decimal m1Amount = m1.Amount;
-        decimal m2Amount = m2.ConvertAmountToCurrency(m1.CurrencyISO);
+        decimal m2Amount = m2.GetAmountInCurrency(m1.CurrencyISO);
 
         return m1Amount == m2Amount;
     }
 
+    /// <summary>
+    /// Checks if the values of the two money object (regardless of currency) are NOT equal
+    /// </summary>
+    /// <param name="m1"></param>
+    /// <param name="m2"></param>
+    /// <returns>True if the values of the two money object (regardless of currency) are NOT equal. False otherwise</returns>
     public static bool operator !=(Money m1, Money m2)
     {
         return !(m1 == m2);

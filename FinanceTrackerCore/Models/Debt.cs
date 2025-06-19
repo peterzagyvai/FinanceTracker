@@ -48,7 +48,7 @@ public class Debt
             decimal payedLoan = 0;
             foreach (var payment in Payments)
             {
-                payedLoan += payment.PaymentAmount.ConvertAmountToCurrency(Loan.CurrencyISO);
+                payedLoan += payment.PaymentAmount.GetAmountInCurrency(Loan.CurrencyISO);
             }
 
             return new Money()
@@ -62,7 +62,7 @@ public class Debt
     /// <summary>
     /// True if the debt has no remaining loan, else false
     /// </summary>
-    public bool IsCompleted => RemainingLoan.ConvertAmountToCurrency("EUR") <= Epsilon;
+    public bool IsCompleted => RemainingLoan.GetAmountInCurrency("EUR") <= Epsilon;
 
 
     /// <summary>

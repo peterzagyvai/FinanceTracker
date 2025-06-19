@@ -44,7 +44,7 @@ public class Purchase : TransactionSource
             new PurchasedItem(amount, pricePerUnit, item)
         );
 
-        From.TransactionAmount = TotalPriceInCurrency(From.TransactionAmount.CurrencyISO).Negate();
+        From.TransactionAmount = TotalPriceInCurrency(From.TransactionAmount.CurrencyISO).GetNegated();
         To.TransactionAmount = TotalPriceInCurrency(To.TransactionAmount.CurrencyISO);
     }
 
@@ -58,7 +58,7 @@ public class Purchase : TransactionSource
         decimal sumPrice = 0;
         foreach (var item in PurchasedItems)
         {
-            sumPrice += item.Price.ConvertAmountToCurrency(isoCode);
+            sumPrice += item.Price.GetAmountInCurrency(isoCode);
         }
 
         return new Money()

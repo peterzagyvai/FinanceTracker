@@ -51,7 +51,7 @@ public class Income : TransactionSource
         SourceOfIncome = sourceOfIncome;
         AmountOfIncome = amountOfIncome;
 
-        From.TransactionAmount = AmountOfIncome.Negate();
+        From.TransactionAmount = AmountOfIncome.GetNegated();
         To.TransactionAmount = AmountOfIncome;
     }
 }
