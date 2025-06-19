@@ -8,17 +8,18 @@ public class Debt
     private static readonly decimal Epsilon = 0.001M;
 
     public DateTime CreationOfDebt { get; set; } = DateTime.Now;
-    public DateTime? deadline { get; set; }
+    public DateTime? Deadline { get; set; }
     public List<Payment> Payments { get; } = new();
     public Money Loan { get; set; }
     public ITransactionParticipant Creditor { get; set; }
     public ITransactionParticipant Debtor { get; set; }
 
-    public Debt(Money loan, ITransactionParticipant creditor, ITransactionParticipant debtor)
+    public Debt(Money loan, ITransactionParticipant creditor, ITransactionParticipant debtor, DateTime? deadline = null)
     {
         Loan = loan;
         Creditor = creditor;
         Debtor = debtor;
+        Deadline = deadline;
     }
 
     public void AddPayment(Money money, DateTime dateOfPayment)
