@@ -11,12 +11,7 @@ public class Purchase : TransactionSource
         get { return _dateOfPurchase; }
         set
         {
-            if (value.Equals(_dateOfPurchase))
-            {
-                return;
-            }
-
-            _dateOfPurchase = value;
+            DateOfPurchase = value;
         }
     }
 
