@@ -1,6 +1,6 @@
 using System;
 
-namespace FinanceTrackerApi.Core.Models;
+namespace FinanceTracker.Core.Models;
 
 public class Money
 {

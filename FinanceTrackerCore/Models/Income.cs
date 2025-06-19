@@ -1,6 +1,6 @@
-using FinanceTrackerApi.Core.Interfaces;
+using FinanceTracker.Core.Interfaces;
 
-namespace FinanceTrackerApi.Core.Models;
+namespace FinanceTracker.Core.Models;
 
 public class Income : TransactionSource
 {
