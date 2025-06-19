@@ -29,7 +29,7 @@ public class Income : TransactionSource
 
     public string SourceOfIncome { get; set; }
 
-    private Money _amountOfIncome;
+    private Money _amountOfIncome = new Money();
     public Money AmountOfIncome
     {
         get { return _amountOfIncome; }
