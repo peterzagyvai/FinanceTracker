@@ -1,6 +1,6 @@
 using System;
 
-namespace FinanceTrackerApi.Core.Interfaces;
+namespace FinanceTracker.Core.Interfaces;
 
 public interface ITransactionParticipant
 {

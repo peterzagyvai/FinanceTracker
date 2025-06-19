@@ -1,7 +1,7 @@
 using System;
-using FinanceTrackerApi.Core.Interfaces;
+using FinanceTracker.Core.Interfaces;
 
-namespace FinanceTrackerApi.Core.Models;
+namespace FinanceTracker.Core.Models;
 
 public class Purchase : TransactionSource
 {
@@ -11,12 +11,7 @@ public class Purchase : TransactionSource
         get { return _dateOfPurchase; }
         set
         {
-            if (value.Equals(_dateOfPurchase))
-            {
-                return;
-            }
-
-            _dateOfPurchase = value;
+            DateOfPurchase = value;
         }
     }
 

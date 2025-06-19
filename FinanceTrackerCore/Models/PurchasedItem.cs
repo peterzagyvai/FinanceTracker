@@ -1,6 +1,6 @@
 using System;
 
-namespace FinanceTrackerApi.Core.Models;
+namespace FinanceTracker.Core.Models;
 
 public class PurchasedItem
 {
@@ -24,7 +24,7 @@ public class PurchasedItem
         }
     }
 
-    private Money _price;
+    private Money _price = new Money();
     public Money Price
     {
         get { return _price; }

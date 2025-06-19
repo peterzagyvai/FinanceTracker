@@ -1,6 +1,6 @@
-using FinanceTrackerApi.Core.Interfaces;
+using FinanceTracker.Core.Interfaces;
 
-namespace FinanceTrackerApi.Core.Models;
+namespace FinanceTracker.Core.Models;
 
 public class Income : TransactionSource
 {
@@ -10,12 +10,7 @@ public class Income : TransactionSource
         get { return _dateOfIncome; }
         set
         {
-            if (value.Equals(_dateOfIncome))
-            {
-                return;
-            }
-
-            _dateOfIncome = value;
+            DateOfIncome = value;
         }
     }
     public DateTime DateOfIncome
@@ -32,9 +27,9 @@ public class Income : TransactionSource
         }
     }
 
-    public string SourceOfIncome { get; set; } = string.Empty;
+    public string SourceOfIncome { get; set; }
 
-    private Money _amountOfIncome;
+    private Money _amountOfIncome = new Money();
     public Money AmountOfIncome
     {
         get { return _amountOfIncome; }

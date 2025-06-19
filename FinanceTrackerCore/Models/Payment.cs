@@ -1,7 +1,7 @@
 using System;
-using FinanceTrackerApi.Core.Interfaces;
+using FinanceTracker.Core.Interfaces;
 
-namespace FinanceTrackerApi.Core.Models;
+namespace FinanceTracker.Core.Models;
 
 public class Payment : TransactionSource
 {
@@ -11,12 +11,7 @@ public class Payment : TransactionSource
         get { return _date; }
         set
         {
-            if (value.Equals(_date))
-            {
-                return;
-            }
-
-            _date = value;
+            Date = value;
         }
     }
 
@@ -34,7 +29,7 @@ public class Payment : TransactionSource
         }
     }
 
-    private Money _amount;
+    private Money _amount = new Money();
     public Money PaymentAmount
     {
         get { return _amount; }

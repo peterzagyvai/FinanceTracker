@@ -1,5 +1,5 @@
 using System.ComponentModel.DataAnnotations;
-using FinanceTrackerApi.Core.Models;
+using FinanceTracker.Core.Models;
 
 namespace FinanceTrackerApi.DataAccess.Entities;
 
