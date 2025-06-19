@@ -10,12 +10,7 @@ public class Income : TransactionSource
         get { return _dateOfIncome; }
         set
         {
-            if (value.Equals(_dateOfIncome))
-            {
-                return;
-            }
-
-            _dateOfIncome = value;
+            DateOfIncome = value;
         }
     }
     public DateTime DateOfIncome
@@ -32,7 +27,7 @@ public class Income : TransactionSource
         }
     }
 
-    public string SourceOfIncome { get; set; } = string.Empty;
+    public string SourceOfIncome { get; set; }
 
     private Money _amountOfIncome;
     public Money AmountOfIncome
