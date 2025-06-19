@@ -1,4 +1,5 @@
 using System;
+using System.Runtime;
 using FinanceTracker.Core.Interfaces;
 
 namespace FinanceTracker.Core.Models;
@@ -32,15 +33,16 @@ public class AppUser : ITransactionParticipant
 
             foreach (var debt in _debts)
             {
-                foreach (var payment in debt.Payments)
+                var paymentAmounts = debt.Payments.Select(payment => payment.PaymentAmount);
+                foreach (var amount in paymentAmounts)
                 {
                     if (debt.Creditor == this)
                     {
-                        moneyOnAccount += payment.PaymentAmount;
+                        moneyOnAccount += amount;
                     }
                     if (debt.Debtor == this)
                     {
-                        moneyOnAccount -= payment.PaymentAmount;
+                        moneyOnAccount -= amount;
                     }
                 }
             }
