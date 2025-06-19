@@ -69,12 +69,41 @@ public class Money
         };
     }
 
-     public static Money operator -(Money m1, Money m2)
+    public static Money operator -(Money m1, Money m2)
     {
         return new Money()
         {
             Amount = m1.Amount - m2.ConvertAmountToCurrency(m1.CurrencyISO),
             CurrencyISO = m1.CurrencyISO
         };
+    }
+
+    public static bool operator >(Money m1, Money m2)
+    {
+        decimal m1Amount = m1.Amount;
+        decimal m2Amount = m2.ConvertAmountToCurrency(m1.CurrencyISO);
+
+        return m1Amount > m2Amount;
+    }
+
+    public static bool operator <(Money m1, Money m2)
+    {
+        decimal m1Amount = m1.Amount;
+        decimal m2Amount = m2.ConvertAmountToCurrency(m1.CurrencyISO);
+
+        return m1Amount < m2Amount;
+    }
+
+    public static bool operator ==(Money m1, Money m2)
+    {
+        decimal m1Amount = m1.Amount;
+        decimal m2Amount = m2.ConvertAmountToCurrency(m1.CurrencyISO);
+
+        return m1Amount == m2Amount;
+    }
+
+    public static bool operator !=(Money m1, Money m2)
+    {
+        return !(m1 == m2);
     }
 }
