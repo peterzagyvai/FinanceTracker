@@ -1,4 +1,6 @@
 using System;
+using FinanceTrackerCore.Helpers;
+using FinanceTrackerCore.Interfaces;
 
 namespace FinanceTracker.Core.Models;
 
@@ -19,7 +21,7 @@ public class Money
 
             ArgumentException.ThrowIfNullOrWhiteSpace(value);
 
-            if (!IsValidISOCode(value))
+            if (!_currencyHelper.IsValidISOCode(value))
             {
                 throw new ArgumentException($"{value} is not a valid ISO currency code");
             }
@@ -28,25 +30,18 @@ public class Money
         }
     }
 
-    //TODO: implement later 
-    /// <summary>
-    /// Checks if the iso code is a valid currency iso code
-    /// </summary>
-    /// <param name="isoCode">The iso code that will be checked</param>
-    /// <returns>True if isoCode is an existing currency iso code. False otherwise.</returns>
-    private static bool IsValidISOCode(string isoCode)
+    public Money(ICurrencyHelper currencyHelper)
     {
-        return true;
+        _currencyHelper = currencyHelper;
     }
 
-    //TODO: implement later
     /// <summary>
     /// Returns the symbol of the currency's iso code
     /// </summary>
     /// <returns>The symbol of the currency's iso code</returns>
     private static string ISOToSymbol(string isoCode)
     {
-        return isoCode;
+        return _currencyHelper.ISOToSymbol(isoCode);
     }
 
     //TODO: implement later
