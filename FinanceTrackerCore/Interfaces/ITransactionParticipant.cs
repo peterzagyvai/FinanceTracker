@@ -4,5 +4,8 @@ namespace FinanceTracker.Core.Interfaces;
 
 public interface ITransactionParticipant
 {
-    public string Username { get; }
+    /// <summary>
+    /// Returns the name of the TransactionParticipant
+    /// </summary>
+    public string Name { get; }
 }

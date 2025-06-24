@@ -49,7 +49,7 @@ public class Payment : TransactionSource
     {
         PaymentAmount = amount;
         Date = date;
-        From.TransactionAmount = PaymentAmount.Negate();
+        From.TransactionAmount = PaymentAmount.GetNegated();
         To.TransactionAmount = PaymentAmount;
     }
 }

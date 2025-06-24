@@ -1,4 +1,5 @@
 using System;
+using System.Collections.ObjectModel;
 using FinanceTracker.Core.Interfaces;
 
 namespace FinanceTracker.Core.Models;
@@ -30,7 +31,7 @@ public class Purchase : TransactionSource
     }
 
     private readonly List<PurchasedItem> _purchasedItems;
-    public List<PurchasedItem> PurchasedItems { get { return _purchasedItems; } }
+    public ReadOnlyCollection<PurchasedItem> PurchasedItems { get { return _purchasedItems.AsReadOnly(); } }
 
     public Purchase(DateTime dateOfPurchase, ITransactionParticipant from, ITransactionParticipant to)
         : base(from, to)
@@ -38,27 +39,42 @@ public class Purchase : TransactionSource
         _purchasedItems = new();
     }
 
+    /// <summary>
+    /// Adds a new purchasablew item to the PurchasedItems collection
+    /// </summary>
+    /// <param name="item">The item that will be added to the collection</param>
+    /// <param name="amount">The amount of the items added to the colelction</param>
+    /// <param name="pricePerUnit">The current price of the item per unit</param>
     public void AddItem(Item item, decimal amount, Money pricePerUnit)
     {
-        PurchasedItems.Add(
+        _purchasedItems.Add(
             new PurchasedItem(amount, pricePerUnit, item)
         );
 
-        From.TransactionAmount = TotalPriceInCurrency(From.TransactionAmount.CurrencyISO).Negate();
+        From.TransactionAmount = TotalPriceInCurrency(From.TransactionAmount.CurrencyISO).GetNegated();
         To.TransactionAmount = TotalPriceInCurrency(To.TransactionAmount.CurrencyISO);
     }
 
+    /// <summary>
+    /// Removes an item from the Purchased items collection
+    /// </summary>
+    /// <param name="item">The item that will be removed from the colelction</param>
     public void RemoveItem(PurchasedItem item)
     {
-        PurchasedItems.Remove(item);
+        _purchasedItems.Remove(item);
     }
 
+    /// <summary>
+    /// Calculates the sum price of the purchsed items in a pre defiend currency
+    /// </summary>
+    /// <param name="isoCode">The iso code of the currency</param>
+    /// <returns>The sum price of the pruchaed items</returns>
     public Money TotalPriceInCurrency(string isoCode)
     {
         decimal sumPrice = 0;
         foreach (var item in PurchasedItems)
         {
-            sumPrice += item.Price.ConvertAmountToCurrency(isoCode);
+            sumPrice += item.Price.GetAmountInCurrency(isoCode);
         }
 
         return new Money()
