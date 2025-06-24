@@ -1,4 +1,5 @@
 using System;
+using System.Collections.ObjectModel;
 using FinanceTracker.Core.Interfaces;
 
 namespace FinanceTracker.Core.Models;
@@ -30,7 +31,7 @@ public class Purchase : TransactionSource
     }
 
     private readonly List<PurchasedItem> _purchasedItems;
-    public List<PurchasedItem> PurchasedItems { get { return _purchasedItems; } }
+    public ReadOnlyCollection<PurchasedItem> PurchasedItems { get { return _purchasedItems.AsReadOnly(); } }
 
     public Purchase(DateTime dateOfPurchase, ITransactionParticipant from, ITransactionParticipant to)
         : base(from, to)
@@ -40,7 +41,7 @@ public class Purchase : TransactionSource
 
     public void AddItem(Item item, decimal amount, Money pricePerUnit)
     {
-        PurchasedItems.Add(
+        _purchasedItems.Add(
             new PurchasedItem(amount, pricePerUnit, item)
         );
 
@@ -50,7 +51,7 @@ public class Purchase : TransactionSource
 
     public void RemoveItem(PurchasedItem item)
     {
-        PurchasedItems.Remove(item);
+        _purchasedItems.Remove(item);
     }
 
     public Money TotalPriceInCurrency(string isoCode)
