@@ -12,7 +12,8 @@ public class AppUser : ITransactionParticipant
     private readonly List<Purchase> _purchases = new();
     private readonly string _username;
     public string Name => _username;
-    
+
+    private CurrencyHelper _currencyHelper = CurrencyHelper.GetDefaultHelper();
     /// <summary>
     /// Returns the current amount of money on the users account
     /// </summary>
@@ -23,15 +24,15 @@ public class AppUser : ITransactionParticipant
             Money moneyOnAccount = new();
 
             foreach (var income in _incomes)
-            {   
-                moneyOnAccount += income.AmountOfIncome;
+            {
+                moneyOnAccount = _currencyHelper.Add(moneyOnAccount, income.AmountOfIncome);
             }
 
             foreach (var purchase in _purchases)
             {
                 foreach (var purchasedItem in purchase.PurchasedItems)
                 {
-                    moneyOnAccount -= purchasedItem.Price;
+                    moneyOnAccount = _currencyHelper.Sub(moneyOnAccount, purchasedItem.Price);
                 }
             }
 
@@ -42,11 +43,11 @@ public class AppUser : ITransactionParticipant
                 {
                     if (debt.Creditor == this)
                     {
-                        moneyOnAccount += amount;
+                        moneyOnAccount = _currencyHelper.Add(moneyOnAccount, amount);
                     }
                     if (debt.Debtor == this)
                     {
-                        moneyOnAccount -= amount;
+                        moneyOnAccount = _currencyHelper.Sub(moneyOnAccount, amount);
                     }
                 }
             }

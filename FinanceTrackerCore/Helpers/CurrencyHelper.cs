@@ -1,5 +1,6 @@
 using System;
 using System.Dynamic;
+using System.Numerics;
 using System.Resources;
 using System.Threading.Tasks;
 using FinanceTracker.Core.Models;
@@ -122,11 +123,23 @@ public class CurrencyHelper
         { "YER" , "﷼" },
         { "ZWD" , "Z$" }
     };
-    private readonly ExchangeRatesApiRepository? _repository;
+    private readonly ExchangeRatesApiRepository _repository;
 
     public CurrencyHelper(ExchangeRatesApiRepository repository)
     {
         _repository = repository;
+    }
+
+    public static CurrencyHelper GetDefaultHelper()
+    {
+        string? key = EnvHelper.GetExchangeRatesKey().Result;
+
+        if (key is null)
+        {
+            throw new Exception("Could not find Exchange rates api key");
+        }
+
+        return new CurrencyHelper(new ExchangeRatesApiRepository(key));
     }
 
     public static bool IsValidISOCode(string isoCode)
@@ -139,14 +152,14 @@ public class CurrencyHelper
         return ISOCodeSymbolDictionary[isoCode.ToUpper()];
     }
 
-    public async Task<Money> ExchangeToNewCurrency(Money money, string to, DateTime date)
+    public Money ExchangeToNewCurrency(Money money, string to, DateTime date)
     {
         if (!IsValidISOCode(to))
         {
             throw new Exception($"{to} is not a valid ISO currency");
         }
 
-        CurrencyRateInfo? info = await _repository.GetCurrencyRates(date);
+        CurrencyRateInfo? info = _repository.GetCurrencyRates(date).Result;
         if (info is null)
         {
             throw new Exception("Getting currency info failed");
@@ -161,4 +174,42 @@ public class CurrencyHelper
             CurrencyISO = to
         };
     }
+
+    public Money Add(Money m1, Money m2)
+    {
+        if (m1.CurrencyISO.ToUpper().Equals(m2.CurrencyISO.ToUpper()))
+        {
+            return new Money()
+            {
+                Amount = m1.Amount + m2.Amount,
+                CurrencyISO = m1.CurrencyISO
+            };
+        }
+
+        decimal sumAmount = m1.Amount + ExchangeToNewCurrency(m2, m1.CurrencyISO, DateTime.Today).Amount;
+        return new Money()
+        {
+            Amount = sumAmount,
+            CurrencyISO = m1.CurrencyISO
+        };
+    } 
+
+    public Money Sub(Money m1, Money m2)
+    {
+        if (m1.CurrencyISO.ToUpper().Equals(m2.CurrencyISO.ToUpper()))
+        {
+            return new Money()
+            {
+                Amount = m1.Amount - m2.Amount,
+                CurrencyISO = m1.CurrencyISO
+            };
+        }
+
+        decimal difAmount = m1.Amount - ExchangeToNewCurrency(m2, m1.CurrencyISO, DateTime.Today).Amount;
+        return new Money()
+        {
+            Amount = difAmount,
+            CurrencyISO = m1.CurrencyISO
+        };
+    } 
 }
