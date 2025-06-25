@@ -119,9 +119,11 @@ public class CurrencyHelper : ICurrencyHelper
         { "YER" , "﷼" },
         { "ZWD" , "Z$" }
     };
+    private ExchangeRatesApiRepository _repository;
 
-    public CurrencyHelper()
+    public CurrencyHelper(ExchangeRatesApiRepository repository)
     {
+        _repository = repository;
     }
 
     public bool IsValidISOCode(string isoCode)
