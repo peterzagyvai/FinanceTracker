@@ -1,11 +1,14 @@
 using System;
 using System.Dynamic;
+using System.Resources;
+using System.Threading.Tasks;
 using FinanceTracker.Core.Models;
-using FinanceTrackerCore.Interfaces;
+using FinanceTrackerCore.Models;
+using FinanceTrackerCore.Repositories;
 
 namespace FinanceTrackerCore.Helpers;
 
-public class CurrencyHelper : ICurrencyHelper
+public class CurrencyHelper
 {
     private static readonly Dictionary<string, string> ISOCodeSymbolDictionary = new()
     {
@@ -119,27 +122,43 @@ public class CurrencyHelper : ICurrencyHelper
         { "YER" , "﷼" },
         { "ZWD" , "Z$" }
     };
-    private ExchangeRatesApiRepository _repository;
+    private readonly ExchangeRatesApiRepository? _repository;
 
     public CurrencyHelper(ExchangeRatesApiRepository repository)
     {
         _repository = repository;
     }
 
-    public bool IsValidISOCode(string isoCode)
+    public static bool IsValidISOCode(string isoCode)
     {
         return ISOCodeSymbolDictionary.ContainsKey(isoCode.ToUpper());
     }
 
-    public string ISOToSymbol(string isoCode)
+    public static string ISOToSymbol(string isoCode)
     {
         return ISOCodeSymbolDictionary[isoCode.ToUpper()];
     }
 
-    public Money ConvertToCurrency(Money money, string isoCode, DateTime date)
+    public async Task<Money> ExchangeToNewCurrency(Money money, string to, DateTime date)
     {
-        return null;
+        if (!IsValidISOCode(to))
+        {
+            throw new Exception($"{to} is not a valid ISO currency");
+        }
+
+        CurrencyRateInfo? info = await _repository.GetCurrencyRates(date);
+        if (info is null)
+        {
+            throw new Exception("Getting currency info failed");
+        }
+
+        decimal moneyAmountInBase = money.Amount / info.Rates[info.Base];
+        decimal moneyAmountInNewCurrency = moneyAmountInBase * info.Rates[to.ToUpper()];
+
+        return new Money()
+        {
+            Amount = moneyAmountInNewCurrency,
+            CurrencyISO = to
+        };
     }
-
-
 }

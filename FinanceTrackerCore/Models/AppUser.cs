@@ -1,6 +1,7 @@
 using System;
 using System.Runtime;
 using FinanceTracker.Core.Interfaces;
+using FinanceTrackerCore.Helpers;
 
 namespace FinanceTracker.Core.Models;
 
@@ -22,7 +23,7 @@ public class AppUser : ITransactionParticipant
             Money moneyOnAccount = new();
 
             foreach (var income in _incomes)
-            {
+            {   
                 moneyOnAccount += income.AmountOfIncome;
             }
 

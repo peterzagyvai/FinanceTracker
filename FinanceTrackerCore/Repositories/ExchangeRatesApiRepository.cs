@@ -1,7 +1,7 @@
 using System.Text.Json;
 using FinanceTrackerCore.Models;
 
-namespace FinanceTrackerCore.Helpers;
+namespace FinanceTrackerCore.Repositories;
 
 public class ExchangeRatesApiRepository
 {
