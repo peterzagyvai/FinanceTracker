@@ -1,11 +1,14 @@
 using System.Collections.ObjectModel;
+using System.Security.Authentication;
 using FinanceTracker.Core.Interfaces;
+using FinanceTrackerCore.Helpers;
 
 namespace FinanceTracker.Core.Models;
 
 public class Debt
 {
     private static readonly decimal Epsilon = 0.001M;
+    private readonly CurrencyHelper _currencyHelper;
 
     /// <summary>
     /// Debt's creation date
@@ -48,7 +51,7 @@ public class Debt
             decimal payedLoan = 0;
             foreach (var payment in Payments)
             {
-                payedLoan += payment.PaymentAmount.GetAmountInCurrency(Loan.CurrencyISO);
+                payedLoan += _currencyHelper.ExchangeToNewCurrency(payment.PaymentAmount, Loan.CurrencyISO, payment.Date).Amount;
             }
 
             return new Money()
@@ -62,7 +65,7 @@ public class Debt
     /// <summary>
     /// True if the debt has no remaining loan, else false
     /// </summary>
-    public bool IsCompleted => RemainingLoan.GetAmountInCurrency("EUR") <= Epsilon;
+    public bool IsCompleted => RemainingLoan.Amount <= Epsilon;
 
 
     /// <summary>
@@ -72,6 +75,7 @@ public class Debt
 
     public Debt(Money loan, ITransactionParticipant creditor, ITransactionParticipant debtor, DateTime? deadline = null)
     {
+        _currencyHelper = CurrencyHelper.GetDefaultHelper();
         _payments = new();
         Loan = loan;
         Creditor = creditor;
@@ -89,7 +93,7 @@ public class Debt
     /// <returns>The amount of money that was added to the payments</returns>
     public Money AddPayment(Money money, DateTime dateOfPayment)
     {
-        if (money > RemainingLoan)
+        if (_currencyHelper.ExchangeToNewCurrency(money, RemainingLoan.CurrencyISO, dateOfPayment).Amount > RemainingLoan.Amount)
         {
             return CompletePayment(dateOfPayment);
         }

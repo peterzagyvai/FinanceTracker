@@ -1,11 +1,13 @@
 using System;
 using System.Collections.ObjectModel;
 using FinanceTracker.Core.Interfaces;
+using FinanceTrackerCore.Helpers;
 
 namespace FinanceTracker.Core.Models;
 
 public class Purchase : TransactionSource
 {
+    private readonly CurrencyHelper _currencyHelper;
     private DateTime _dateOfPurchase;
     public override DateTime DateOfTransaction
     {
@@ -36,6 +38,7 @@ public class Purchase : TransactionSource
     public Purchase(DateTime dateOfPurchase, ITransactionParticipant from, ITransactionParticipant to)
         : base(from, to)
     {
+        _currencyHelper = CurrencyHelper.GetDefaultHelper();
         _purchasedItems = new();
     }
 
@@ -51,8 +54,7 @@ public class Purchase : TransactionSource
             new PurchasedItem(amount, pricePerUnit, item)
         );
 
-        From.TransactionAmount = TotalPriceInCurrency(From.TransactionAmount.CurrencyISO).GetNegated();
-        To.TransactionAmount = TotalPriceInCurrency(To.TransactionAmount.CurrencyISO);
+        Transaction.TransactionAmount = TotalPriceInCurrency(Transaction.TransactionAmount.CurrencyISO);
     }
 
     /// <summary>
@@ -74,7 +76,7 @@ public class Purchase : TransactionSource
         decimal sumPrice = 0;
         foreach (var item in PurchasedItems)
         {
-            sumPrice += item.Price.GetAmountInCurrency(isoCode);
+            sumPrice += _currencyHelper.ExchangeToNewCurrency(item.Price, isoCode, DateOfPurchase).Amount;
         }
 
         return new Money()

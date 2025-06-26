@@ -1,17 +1,20 @@
 using System;
 using System.Runtime;
 using FinanceTracker.Core.Interfaces;
+using FinanceTrackerCore.Helpers;
 
 namespace FinanceTracker.Core.Models;
 
 public class AppUser : ITransactionParticipant
 {
+    private readonly CurrencyHelper _currencyHelper = CurrencyHelper.GetDefaultHelper();
     private readonly List<Debt> _debts = new();
     private readonly List<Income> _incomes = new();
     private readonly List<Purchase> _purchases = new();
     private readonly string _username;
     public string Name => _username;
-    
+
+
     /// <summary>
     /// Returns the current amount of money on the users account
     /// </summary>
@@ -23,14 +26,14 @@ public class AppUser : ITransactionParticipant
 
             foreach (var income in _incomes)
             {
-                moneyOnAccount += income.AmountOfIncome;
+                moneyOnAccount = _currencyHelper.Add(moneyOnAccount, income.AmountOfIncome);
             }
 
             foreach (var purchase in _purchases)
             {
                 foreach (var purchasedItem in purchase.PurchasedItems)
                 {
-                    moneyOnAccount -= purchasedItem.Price;
+                    moneyOnAccount = _currencyHelper.Sub(moneyOnAccount, purchasedItem.Price);
                 }
             }
 
@@ -41,11 +44,11 @@ public class AppUser : ITransactionParticipant
                 {
                     if (debt.Creditor == this)
                     {
-                        moneyOnAccount += amount;
+                        moneyOnAccount = _currencyHelper.Add(moneyOnAccount, amount);
                     }
                     if (debt.Debtor == this)
                     {
-                        moneyOnAccount -= amount;
+                        moneyOnAccount = _currencyHelper.Sub(moneyOnAccount, amount);
                     }
                 }
             }
