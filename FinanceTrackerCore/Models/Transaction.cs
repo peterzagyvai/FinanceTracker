@@ -7,11 +7,13 @@ public class Transaction
 {
     public Money TransactionAmount { get; set; }
     public TransactionSource TransactionSource { get; }
-    public ITransactionParticipant User { get; }
-    public Transaction(Money transactionAmount, TransactionSource transactionSource, ITransactionParticipant user)
+    public ITransactionParticipant From { get; }
+    public ITransactionParticipant To { get; }
+    public Transaction(Money transactionAmount, TransactionSource transactionSource, ITransactionParticipant from, ITransactionParticipant to)
     {
         TransactionAmount = transactionAmount;
         TransactionSource = transactionSource;
-        User = user;
+        From = from;
+        To = to;
     }
 }
