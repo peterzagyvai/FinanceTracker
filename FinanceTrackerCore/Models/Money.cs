@@ -10,7 +10,7 @@ public class Money
     public string CurrencyISO
     {
         get { return _currencyISO; }
-        set
+        init
         {
             if (value == _currencyISO)
             {

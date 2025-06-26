@@ -175,7 +175,7 @@ public class CurrencyHelper
         };
     }
 
-    public Money Add(Money m1, Money m2)
+    public Money Add(Money m1, Money m2, DateTime date)
     {
         if (m1.CurrencyISO.ToUpper().Equals(m2.CurrencyISO.ToUpper()))
         {
@@ -186,15 +186,16 @@ public class CurrencyHelper
             };
         }
 
-        decimal sumAmount = m1.Amount + ExchangeToNewCurrency(m2, m1.CurrencyISO, DateTime.Today).Amount;
+        decimal sumAmount = m1.Amount + ExchangeToNewCurrency(m2, m1.CurrencyISO, date).Amount;
         return new Money()
         {
             Amount = sumAmount,
             CurrencyISO = m1.CurrencyISO
         };
-    } 
+    }
+    public Money Add(Money m1, Money m2) => Add(m1, m2, DateTime.Today);
 
-    public Money Sub(Money m1, Money m2)
+    public Money Sub(Money m1, Money m2, DateTime date)
     {
         if (m1.CurrencyISO.ToUpper().Equals(m2.CurrencyISO.ToUpper()))
         {
@@ -205,11 +206,12 @@ public class CurrencyHelper
             };
         }
 
-        decimal difAmount = m1.Amount - ExchangeToNewCurrency(m2, m1.CurrencyISO, DateTime.Today).Amount;
+        decimal difAmount = m1.Amount - ExchangeToNewCurrency(m2, m1.CurrencyISO, date).Amount;
         return new Money()
         {
             Amount = difAmount,
             CurrencyISO = m1.CurrencyISO
         };
-    } 
+    }
+    public Money Sub(Money m1, Money m2) => Sub(m1, m2, DateTime.Today);
 }
