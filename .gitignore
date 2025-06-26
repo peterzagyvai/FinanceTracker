@@ -273,3 +273,6 @@ appsettings.Development.json
 
 #vscode
 *.code-workspace
+
+#env
+*.env
