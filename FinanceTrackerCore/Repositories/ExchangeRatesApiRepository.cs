@@ -1,3 +1,5 @@
+using System.Data.Common;
+using System.Runtime.InteropServices.Marshalling;
 using System.Text.Json;
 using FinanceTrackerCore.Interfaces;
 using FinanceTrackerCore.Models;
@@ -6,12 +8,25 @@ namespace FinanceTrackerCore.Repositories;
 
 public class ExchangeRatesApiRepository : IExchangeRepository
 {
-    private static readonly string saveDir = @"./saves/exchange_rates/";
+    private readonly string _saveDir = @"./saves/exchange_rates/";
+    private readonly bool _saveDirCahnged = false;
     private static readonly string saveFilePostfix = "_currency.json";
     private readonly string _apiKey;
 
-    public ExchangeRatesApiRepository(string apiKey)
+    /// <summary>
+    /// Sets the api key for the calls. Can change the caching directory but only for testing. DO NOT set for prod
+    /// </summary>
+    /// <param name="apiKey"></param>
+    /// <param name="saveDir"></param>
+    public ExchangeRatesApiRepository(string apiKey, string? saveDir = null)
     {
+        if (saveDir is not null) // Can cahnge the save dir for testing
+        {
+            _saveDir = saveDir;
+            _saveDirCahnged = true;
+        }
+
+        CreateSaveDir();
         _apiKey = apiKey;
     }
 
@@ -42,9 +57,29 @@ public class ExchangeRatesApiRepository : IExchangeRepository
     /// </summary>
     /// <param name="date">The date of the currency rates</param>
     /// <returns></returns>
-    private static bool CurrencyRatesIsCached(DateTime date)
+    public bool CurrencyRatesIsCached(DateTime date)
     {
-        return File.Exists(CreateFileName(date));
+        return File.Exists(GetFileName(date));
+    }
+
+    /// <summary>
+    /// Empties the save directory. Only usable if caching directory was cahgned (used for testing)
+    /// </summary>
+    public void ResetSaveDirectory()
+    {
+        if (!_saveDirCahnged) // Only if runs in a testing environment
+        {
+            return;
+        }
+
+        string[] filesInDir = Directory.GetFiles(_saveDir);
+        foreach (string filePath in filesInDir)
+        {
+            if (File.Exists(filePath))
+            {
+                File.Delete(filePath);
+            }
+        }
     }
 
     /// <summary>
@@ -54,9 +89,9 @@ public class ExchangeRatesApiRepository : IExchangeRepository
     /// </summary>
     /// <param name="date"></param>
     /// <returns>A string representing a save file name</returns>
-    private static string CreateFileName(DateTime date)
+    private string GetFileName(DateTime date)
     {
-        return $"{saveDir}{date.Date.GetHashCode()}{saveFilePostfix}";
+        return $"{_saveDir}{date.Date.GetHashCode()}{saveFilePostfix}";
     }
 
     /// <summary>
@@ -67,7 +102,7 @@ public class ExchangeRatesApiRepository : IExchangeRepository
     /// <returns></returns>
     private async Task CacheCurrencyDataToJsonAsync(CurrencyRateInfo info, DateTime date)
     {
-        string filePath = CreateFileName(date);
+        string filePath = GetFileName(date);
         if (!File.Exists(filePath))
         {
             await using FileStream fs = File.Open(filePath, FileMode.OpenOrCreate);
@@ -87,12 +122,18 @@ public class ExchangeRatesApiRepository : IExchangeRepository
     /// <returns>A CurrencyRateInfo if the method was succeds. null if not</returns>
     private async Task<CurrencyRateInfo?> GetCurrencyDataFromApiAsync(DateTime date)
     {
+        if (date.Date > DateTime.Today)
+        {
+            return null;
+        }
+
         string formatedDateString =
             (date.Date == DateTime.Today ?
             "latest" :
             date.ToShortDateString());
 
         using HttpClient client = new();
+
         var content = await client.GetStringAsync($"https://api.exchangeratesapi.io/v1/{formatedDateString}?access_key={_apiKey}");
 
         var doc = JsonDocument.Parse(content);
@@ -108,7 +149,7 @@ public class ExchangeRatesApiRepository : IExchangeRepository
     /// <returns>A CurrencyRateInfo if the method was succeds. null if not</returns>
     private async Task<CurrencyRateInfo?> ReadCurrencyDataFromJsonAsync(DateTime date)
     {
-        string filePath = CreateFileName(date);
+        string filePath = GetFileName(date);
 
         if (!File.Exists(filePath))
         {
@@ -119,5 +160,15 @@ public class ExchangeRatesApiRepository : IExchangeRepository
 
         JsonSerializerOptions options = new() { PropertyNameCaseInsensitive = true };
         return await JsonSerializer.DeserializeAsync<CurrencyRateInfo?>(fs, options);
+    }
+
+    private void CreateSaveDir()
+    {
+        if (Directory.Exists(_saveDir))
+        {
+            return;
+        }
+
+        Directory.CreateDirectory(_saveDir);
     }
 }
