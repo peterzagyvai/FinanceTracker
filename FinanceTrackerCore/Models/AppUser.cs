@@ -7,13 +7,14 @@ namespace FinanceTracker.Core.Models;
 
 public class AppUser : ITransactionParticipant
 {
+    private readonly CurrencyHelper _currencyHelper = CurrencyHelper.GetDefaultHelper();
     private readonly List<Debt> _debts = new();
     private readonly List<Income> _incomes = new();
     private readonly List<Purchase> _purchases = new();
     private readonly string _username;
     public string Name => _username;
 
-    private CurrencyHelper _currencyHelper = CurrencyHelper.GetDefaultHelper();
+
     /// <summary>
     /// Returns the current amount of money on the users account
     /// </summary>
