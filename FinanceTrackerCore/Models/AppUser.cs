@@ -26,29 +26,29 @@ public class AppUser : ITransactionParticipant
 
             foreach (var income in _incomes)
             {
-                moneyOnAccount = _currencyHelper.Add(moneyOnAccount, income.AmountOfIncome);
+                moneyOnAccount = _currencyHelper.Add(moneyOnAccount, income.AmountOfIncome, income.DateOfIncome);
             }
 
             foreach (var purchase in _purchases)
             {
                 foreach (var purchasedItem in purchase.PurchasedItems)
                 {
-                    moneyOnAccount = _currencyHelper.Sub(moneyOnAccount, purchasedItem.Price);
+                    moneyOnAccount = _currencyHelper.Sub(moneyOnAccount, purchasedItem.Price, purchase.DateOfPurchase);
                 }
             }
 
             foreach (var debt in _debts)
             {
-                var paymentAmounts = debt.Payments.Select(payment => payment.PaymentAmount);
-                foreach (var amount in paymentAmounts)
+                var paymentAmountAndDate = debt.Payments.Select(payment => (payment.PaymentAmount, payment.DateOfTransaction));
+                foreach (var amountAndDate in paymentAmountAndDate)
                 {
                     if (debt.Creditor == this)
                     {
-                        moneyOnAccount = _currencyHelper.Add(moneyOnAccount, amount);
+                        moneyOnAccount = _currencyHelper.Add(moneyOnAccount, amountAndDate.PaymentAmount, amountAndDate.DateOfTransaction);
                     }
                     if (debt.Debtor == this)
                     {
-                        moneyOnAccount = _currencyHelper.Sub(moneyOnAccount, amount);
+                        moneyOnAccount = _currencyHelper.Sub(moneyOnAccount, amountAndDate.PaymentAmount, amountAndDate.DateOfTransaction);
                     }
                 }
             }

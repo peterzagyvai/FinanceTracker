@@ -17,7 +17,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Itegration\" />
+    <Folder Include="Integration\" />
   </ItemGroup>
 
   <ItemGroup>

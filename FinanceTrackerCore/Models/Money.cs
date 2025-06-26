@@ -5,7 +5,7 @@ namespace FinanceTracker.Core.Models;
 
 public class Money
 {
-    public decimal Amount { get; set; } = 0;
+    public decimal Amount { get; init; } = 0;
     private string _currencyISO = "EUR";
     public string CurrencyISO
     {
@@ -24,7 +24,7 @@ public class Money
                 throw new ArgumentException($"{value} is not a valid ISO currency code");
             }
 
-            _currencyISO = value;
+            _currencyISO = value.ToUpper();
         }
     }
 
