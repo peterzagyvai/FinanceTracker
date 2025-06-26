@@ -54,8 +54,7 @@ public class Purchase : TransactionSource
             new PurchasedItem(amount, pricePerUnit, item)
         );
 
-        From.TransactionAmount = TotalPriceInCurrency(From.TransactionAmount.CurrencyISO).GetNegated();
-        To.TransactionAmount = TotalPriceInCurrency(To.TransactionAmount.CurrencyISO);
+        Transaction.TransactionAmount = TotalPriceInCurrency(Transaction.TransactionAmount.CurrencyISO);
     }
 
     /// <summary>
