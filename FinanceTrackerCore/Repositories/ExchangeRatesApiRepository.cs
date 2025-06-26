@@ -1,9 +1,10 @@
 using System.Text.Json;
+using FinanceTrackerCore.Interfaces;
 using FinanceTrackerCore.Models;
 
 namespace FinanceTrackerCore.Repositories;
 
-public class ExchangeRatesApiRepository
+public class ExchangeRatesApiRepository : IExchangeRepository
 {
     private static readonly string saveDir = @"./saves/exchange_rates/";
     private static readonly string saveFilePostfix = "_currency.json";

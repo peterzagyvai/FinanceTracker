@@ -4,6 +4,7 @@ using System.Numerics;
 using System.Resources;
 using System.Threading.Tasks;
 using FinanceTracker.Core.Models;
+using FinanceTrackerCore.Interfaces;
 using FinanceTrackerCore.Models;
 using FinanceTrackerCore.Repositories;
 
@@ -123,7 +124,7 @@ public class CurrencyHelper
         { "YER" , "﷼" },
         { "ZWD" , "Z$" }
     };
-    private readonly ExchangeRatesApiRepository _repository;
+    private readonly IExchangeRepository _repository;
 
     public CurrencyHelper(ExchangeRatesApiRepository repository)
     {
