@@ -49,4 +49,14 @@ public class Money
     {
         return $"{Amount} {CurrencyHelper.ISOToSymbol(CurrencyISO)}";
     }
+
+    public override bool Equals(object? obj)
+    {
+        if (obj is Money money)
+        {
+            return money.Amount == Amount && money.CurrencyISO.Equals(CurrencyISO);
+        }
+
+        return false;
+    }
 }

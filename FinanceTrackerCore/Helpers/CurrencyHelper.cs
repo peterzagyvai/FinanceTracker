@@ -336,11 +336,21 @@ public class CurrencyHelper
         return isoCode.ToUpper();
     }
 
+    public static bool AreSameCurrencies(string isoCode1, string isoCode2)
+    {
+        return isoCode1.ToUpper().Equals(isoCode2.ToUpper());
+    }
+
     public Money ExchangeToNewCurrency(Money money, string to, DateTime date)
     {
         if (!IsValidISOCode(to))
         {
             throw new ArgumentException($"{to} is not a valid ISO currency");
+        }
+
+        if (AreSameCurrencies(money.CurrencyISO, to))
+        {
+            return money;
         }
 
         CurrencyRateInfo? info = _repository.GetCurrencyRates(date).Result;

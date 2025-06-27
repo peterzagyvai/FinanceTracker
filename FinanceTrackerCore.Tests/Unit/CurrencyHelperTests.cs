@@ -317,4 +317,12 @@ public class CurrencyHelperTests
         Assert.AreEqual(diff32.Amount, diff32Expected.Amount);
         Assert.AreEqual(diff32.CurrencyISO, diff32Expected.CurrencyISO);
     }
+
+    [TestMethod]
+    public void AreSameCurrenciesTest()
+    {
+        Assert.IsTrue(CurrencyHelper.AreSameCurrencies("HUF", "HUF"));
+        Assert.IsTrue(CurrencyHelper.AreSameCurrencies("huf", "HUF"));
+        Assert.IsFalse(CurrencyHelper.AreSameCurrencies("EUR", "HUF"));
+    }
 }

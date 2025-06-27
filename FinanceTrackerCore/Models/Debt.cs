@@ -8,7 +8,7 @@ namespace FinanceTracker.Core.Models;
 public class Debt
 {
     private static readonly decimal Epsilon = 0.001M;
-    private readonly CurrencyHelper _currencyHelper;
+    private readonly CurrencyHelper _currencyHelper = CurrencyHelper.GetDefaultHelper();
 
     /// <summary>
     /// Debt's creation date
@@ -73,13 +73,24 @@ public class Debt
     /// </summary>
     public bool HasDeadline => Deadline != null;
 
-    public Debt(Money loan, ITransactionParticipant creditor, ITransactionParticipant debtor, DateTime? deadline = null)
+    public Debt(
+        Money loan,
+        ITransactionParticipant creditor,
+        ITransactionParticipant debtor,
+        DateTime creationOfDebt,
+        DateTime? deadline = null,
+        CurrencyHelper? currencyyHelper = null)
     {
-        _currencyHelper = CurrencyHelper.GetDefaultHelper();
+        if (currencyyHelper is not null)
+        {
+            _currencyHelper = currencyyHelper; 
+        }
+
         _payments = new();
         Loan = loan;
         Creditor = creditor;
         Debtor = debtor;
+        CreationOfDebt = creationOfDebt;
         Deadline = deadline;
     }
 
@@ -91,8 +102,18 @@ public class Debt
     /// <param name="money">Money payed</param>
     /// <param name="dateOfPayment">Date of the payment</param>
     /// <returns>The amount of money that was added to the payments</returns>
-    public Money AddPayment(Money money, DateTime dateOfPayment)
+    public Money? AddPayment(Money money, DateTime dateOfPayment)
     {
+        if (money.Amount == 0)
+        {
+            return null;
+        }
+
+        if (IsCompleted)
+        {
+            return null;
+        }
+
         if (_currencyHelper.ExchangeToNewCurrency(money, RemainingLoan.CurrencyISO, dateOfPayment).Amount > RemainingLoan.Amount)
         {
             return CompletePayment(dateOfPayment);
