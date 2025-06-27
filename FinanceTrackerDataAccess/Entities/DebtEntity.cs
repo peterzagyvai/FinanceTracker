@@ -1,7 +1,5 @@
 using System;
 using System.ComponentModel.DataAnnotations;
-using FinanceTracker.Core.Interfaces;
-using FinanceTracker.Core.Models;
 
 namespace FinanceTrackerApi.DataAccess.Entities;
 

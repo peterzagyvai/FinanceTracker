@@ -9,7 +9,7 @@ public class ItemEntity
 
     [Required]
     public string? Name { get; set; }
-    
+
     [Required]
     public string? Category { get; set; }
     public UnitOfMeasure UnitOfMeasure { get; set; }
