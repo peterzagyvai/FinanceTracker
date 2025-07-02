@@ -4,6 +4,7 @@ using System.Numerics;
 using System.Resources;
 using System.Threading.Tasks;
 using FinanceTracker.Core.Models;
+using FinanceTrackerCore.Interfaces;
 using FinanceTrackerCore.Models;
 using FinanceTrackerCore.Repositories;
 
@@ -13,9 +14,9 @@ public class CurrencyHelper
 {
     private static readonly Dictionary<string, string> ISOCodeSymbolDictionary = new()
     {
-        { "ALL" , "Lek" },
         { "AFN" , "؋" },
         { "ARS" , "$" },
+        { "ALL" , "Lek" },
         { "AWG" , "ƒ" },
         { "AUD" , "$" },
         { "AZN" , "₼" },
@@ -123,9 +124,182 @@ public class CurrencyHelper
         { "YER" , "﷼" },
         { "ZWD" , "Z$" }
     };
-    private readonly ExchangeRatesApiRepository _repository;
+    private static readonly HashSet<string> ConvertableISOCodes = new()
+    {
+        "AED",
+        "AFN",
+        "ALL",
+        "AMD",
+        "ANG",
+        "AOA",
+        "ARS",
+        "AUD",
+        "AWG",
+        "AZN",
+        "BAM",
+        "BBD",
+        "BDT",
+        "BGN",
+        "BHD",
+        "BIF",
+        "BMD",
+        "BND",
+        "BOB",
+        "BRL",
+        "BSD",
+        "BTC",
+        "BTN",
+        "BWP",
+        "BYN",
+        "BYR",
+        "BZD",
+        "CAD",
+        "CDF",
+        "CHF",
+        "CLF",
+        "CLP",
+        "CNY",
+        "COP",
+        "CRC",
+        "CUC",
+        "CUP",
+        "CVE",
+        "CZK",
+        "DJF",
+        "DKK",
+        "DOP",
+        "DZD",
+        "EGP",
+        "ERN",
+        "ETB",
+        "EUR",
+        "FJD",
+        "FKP",
+        "GBP",
+        "GEL",
+        "GGP",
+        "GHS",
+        "GIP",
+        "GMD",
+        "GNF",
+        "GTQ",
+        "GYD",
+        "HKD",
+        "HNL",
+        "HRK",
+        "HTG",
+        "HUF",
+        "IDR",
+        "ILS",
+        "IMP",
+        "INR",
+        "IQD",
+        "IRR",
+        "ISK",
+        "JEP",
+        "JMD",
+        "JOD",
+        "JPY",
+        "KES",
+        "KGS",
+        "KHR",
+        "KMF",
+        "KPW",
+        "KRW",
+        "KWD",
+        "KYD",
+        "KZT",
+        "LAK",
+        "LBP",
+        "LKR",
+        "LRD",
+        "LSL",
+        "LTL",
+        "LVL",
+        "LYD",
+        "MAD",
+        "MDL",
+        "MGA",
+        "MKD",
+        "MMK",
+        "MNT",
+        "MOP",
+        "MRU",
+        "MUR",
+        "MVR",
+        "MWK",
+        "MXN",
+        "MYR",
+        "MZN",
+        "NAD",
+        "NGN",
+        "NIO",
+        "NOK",
+        "NPR",
+        "NZD",
+        "OMR",
+        "PAB",
+        "PEN",
+        "PGK",
+        "PHP",
+        "PKR",
+        "PLN",
+        "PYG",
+        "QAR",
+        "RON",
+        "RSD",
+        "RUB",
+        "RWF",
+        "SAR",
+        "SBD",
+        "SCR",
+        "SDG",
+        "SEK",
+        "SGD",
+        "SHP",
+        "SLE",
+        "SLL",
+        "SOS",
+        "SRD",
+        "STD",
+        "SYP",
+        "SZL",
+        "THB",
+        "TJS",
+        "TMT",
+        "TND",
+        "TOP",
+        "TRY",
+        "TTD",
+        "TWD",
+        "TZS",
+        "UAH",
+        "UGX",
+        "USD",
+        "UYU",
+        "UZS",
+        "VEF",
+        "VES",
+        "VND",
+        "VUV",
+        "WST",
+        "XAF",
+        "XAG",
+        "XAU",
+        "XCD",
+        "XDR",
+        "XOF",
+        "XPF",
+        "YER",
+        "ZAR",
+        "ZMK",
+        "ZMW",
+        "ZWL"
+    };
 
-    public CurrencyHelper(ExchangeRatesApiRepository repository)
+    private readonly IExchangeRepository _repository;
+
+    public CurrencyHelper(IExchangeRepository repository)
     {
         _repository = repository;
     }
@@ -144,25 +318,45 @@ public class CurrencyHelper
 
     public static bool IsValidISOCode(string isoCode)
     {
-        return ISOCodeSymbolDictionary.ContainsKey(isoCode.ToUpper());
+        return ConvertableISOCodes.Contains(isoCode.ToUpper());
     }
 
-    public static string ISOToSymbol(string isoCode)
+    public static string? ISOToSymbol(string isoCode)
     {
-        return ISOCodeSymbolDictionary[isoCode.ToUpper()];
+        if (!IsValidISOCode(isoCode))
+        {
+            return null;
+        }
+
+        if (ISOCodeSymbolDictionary.ContainsKey(isoCode))
+        {
+            return ISOCodeSymbolDictionary[isoCode.ToUpper()];
+        }
+
+        return isoCode.ToUpper();
+    }
+
+    public static bool AreSameCurrencies(string isoCode1, string isoCode2)
+    {
+        return isoCode1.ToUpper().Equals(isoCode2.ToUpper());
     }
 
     public Money ExchangeToNewCurrency(Money money, string to, DateTime date)
     {
         if (!IsValidISOCode(to))
         {
-            throw new Exception($"{to} is not a valid ISO currency");
+            throw new ArgumentException($"{to} is not a valid ISO currency");
+        }
+
+        if (AreSameCurrencies(money.CurrencyISO, to))
+        {
+            return money;
         }
 
         CurrencyRateInfo? info = _repository.GetCurrencyRates(date).Result;
         if (info is null)
         {
-            throw new Exception("Getting currency info failed");
+            throw new InvalidOperationException("Getting currency info failed");
         }
 
         decimal moneyAmountInBase = money.Amount / info.Rates[info.Base];
@@ -193,7 +387,6 @@ public class CurrencyHelper
             CurrencyISO = m1.CurrencyISO
         };
     }
-    public Money Add(Money m1, Money m2) => Add(m1, m2, DateTime.Today);
 
     public Money Sub(Money m1, Money m2, DateTime date)
     {
@@ -213,5 +406,4 @@ public class CurrencyHelper
             CurrencyISO = m1.CurrencyISO
         };
     }
-    public Money Sub(Money m1, Money m2) => Sub(m1, m2, DateTime.Today);
 }

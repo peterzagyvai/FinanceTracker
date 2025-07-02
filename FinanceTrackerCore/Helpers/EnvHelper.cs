@@ -4,11 +4,28 @@ namespace FinanceTrackerCore.Helpers;
 
 public static class EnvHelper
 {
-    private static string envPath = @"D:/Projects/FinanceTracker/FinanceTrackerCore"; //FIXME: Delete this priavte static field
+    private static string? envPath = null;
+
+    public static bool SetPath(string path)
+    {
+        if (!File.Exists(path))
+        {
+            return false;
+        }
+
+        envPath = path;
+        return true;
+    }
 
     public static async Task<string?> GetExchangeRatesKey()
     {
-        using StreamReader sr = new(envPath);
+        if (envPath is null)
+        {
+            return null;
+        }
+
+        using FileStream fs = File.OpenRead(envPath);
+        using StreamReader sr = new(fs);
         string? line = null;
         while ((line = await sr.ReadLineAsync()) is not null)
         {
