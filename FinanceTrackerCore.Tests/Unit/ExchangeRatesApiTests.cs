@@ -1,8 +1,8 @@
+using System.Reflection;
 using System.Threading.Tasks;
 using FinanceTrackerCore.Helpers;
 using FinanceTrackerCore.Models;
 using FinanceTrackerCore.Repositories;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Company.TestProject1;
 
@@ -12,10 +12,12 @@ public class ExchangeRatesApiTests
     private readonly string _testingDir = @"./testing/";
     private readonly DateTime _testingDate = new DateTime(2024, 01, 01);
     private ExchangeRatesApiRepository _repo;
+    public TestContext TestContext { get; set; }
 
     [TestInitialize]
     public async Task Setup()
     {
+        EnvHelper.SetPath(@"E:/.env");
         string? key = await EnvHelper.GetExchangeRatesKey();
         if (key is null)
         {
